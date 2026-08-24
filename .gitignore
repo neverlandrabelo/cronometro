@@ -1,0 +1,13 @@
+# Arquivos temporários e de sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs e diagnósticos
+*.log
+npm-debug.log*
+
+# Diretórios de IDE / Workspace
+.vscode/
+.idea/
+.gemini/

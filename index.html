@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Cronômetro e Temporizador online de alta precisão com registro de voltas, atalhos de teclado e design moderno.">
+  <meta name="theme-color" content="#0d1117">
+  <title>Cronômetro & Temporizador de Alta Precisão</title>
+  
+  <!-- Fontes do Google -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="background-glow" aria-hidden="true"></div>
+
+  <main class="app-container" id="app">
+    <!-- Cabeçalho & Seleção de Modo -->
+    <header class="app-header">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="13" r="8"></circle>
+          <path d="M12 9v4l2 2"></path>
+          <path d="M5 3L2 6"></path>
+          <path d="M22 6l-3-3"></path>
+          <path d="M12 2v2"></path>
+        </svg>
+        <h1>Cronômetro Pro</h1>
+      </div>
+
+      <!-- Abas de Navegação -->
+      <nav class="mode-tabs" role="tablist" aria-label="Modo de Operação">
+        <button id="tab-stopwatch" class="tab-btn active" role="tab" aria-selected="true" aria-controls="stopwatch-section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span>Cronômetro</span>
+        </button>
+        <button id="tab-timer" class="tab-btn" role="tab" aria-selected="false" aria-controls="timer-section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2h4"></path><path d="M12 14v-4"></path><path d="M4 13a8 8 0 0 1 8-7 8 8 0 1 1-5.3 14L4 17.6"></path><path d="M9 17H4v5"></path></svg>
+          <span>Temporizador</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- Seção Principal: CRONÔMETRO -->
+    <section id="stopwatch-section" class="mode-section active" role="tabpanel" aria-labelledby="tab-stopwatch">
+      <div class="display-card">
+        <!-- Anel de Progresso Circular -->
+        <div class="progress-ring-container">
+          <svg class="progress-ring" width="280" height="280" viewBox="0 0 280 280">
+            <circle class="progress-ring-track" cx="140" cy="140" r="125"></circle>
+            <circle id="stopwatch-ring-progress" class="progress-ring-fill" cx="140" cy="140" r="125"></circle>
+          </svg>
+
+          <!-- Display Digital de Tempo -->
+          <div class="digital-display" id="stopwatch-display">
+            <div class="time-main">
+              <span id="sw-hours" class="time-unit hide-zero">00:</span>
+              <span id="sw-minutes" class="time-unit">00</span><span class="colon">:</span>
+              <span id="sw-seconds" class="time-unit">00</span>
+            </div>
+            <div class="time-millis">
+              <span class="dot">.</span><span id="sw-millis">00</span>
+            </div>
+            <div class="status-badge" id="sw-status">Pronto</div>
+          </div>
+        </div>
+
+        <!-- Botões de Controle do Cronômetro -->
+        <div class="controls-container">
+          <button id="btn-sw-lap" class="btn btn-secondary" disabled title="Registrar Volta (Atalho: L)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+            <span>Volta</span>
+          </button>
+
+          <button id="btn-sw-toggle" class="btn btn-primary btn-start" title="Iniciar/Pausar (Atalho: Espaço)">
+            <svg id="sw-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <svg id="sw-pause-icon" class="hidden" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+            <span id="sw-toggle-text">Iniciar</span>
+          </button>
+
+          <button id="btn-sw-reset" class="btn btn-secondary" disabled title="Zerar Cronômetro (Atalho: R)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+            <span>Zerar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Seção de Voltas / Laps -->
+      <section class="laps-section" id="laps-container" aria-label="Histórico de Voltas">
+        <div class="laps-header">
+          <div class="laps-title">
+            <h3>Voltas Registradas (<span id="laps-count">0</span>)</h3>
+          </div>
+          <div class="laps-actions">
+            <button id="btn-copy-laps" class="btn-icon" title="Copiar Voltas para Área de Transferência" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copiar</span>
+            </button>
+            <button id="btn-export-csv" class="btn-icon" title="Baixar Voltas em CSV" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Exportar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Estatísticas das Voltas -->
+        <div class="laps-summary hidden" id="laps-summary">
+          <div class="summary-card best">
+            <span class="summary-label">Mais Rápida</span>
+            <span class="summary-value" id="stat-best">-</span>
+          </div>
+          <div class="summary-card worst">
+            <span class="summary-label">Mais Lenta</span>
+            <span class="summary-value" id="stat-worst">-</span>
+          </div>
+          <div class="summary-card avg">
+            <span class="summary-label">Tempo Médio</span>
+            <span class="summary-value" id="stat-avg">-</span>
+          </div>
+        </div>
+
+        <!-- Tabela de Voltas -->
+        <div class="laps-table-wrapper">
+          <div class="empty-laps" id="empty-laps-msg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+            <p>Nenhuma volta registrada ainda. Pressione "Volta" enquanto o cronômetro estiver em execução.</p>
+          </div>
+          <table class="laps-table hidden" id="laps-table">
+            <thead>
+              <tr>
+                <th>Volta</th>
+                <th>Tempo da Volta</th>
+                <th>Tempo Total</th>
+              </tr>
+            </thead>
+            <tbody id="laps-tbody">
+              <!-- Linhas geradas via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <!-- Seção Secundária: TEMPORIZADOR (Countdown) -->
+    <section id="timer-section" class="mode-section" role="tabpanel" aria-labelledby="tab-timer">
+      <div class="display-card">
+        <!-- Anel de Progresso do Timer -->
+        <div class="progress-ring-container">
+          <svg class="progress-ring" width="280" height="280" viewBox="0 0 280 280">
+            <circle class="progress-ring-track" cx="140" cy="140" r="125"></circle>
+            <circle id="timer-ring-progress" class="progress-ring-fill timer-ring" cx="140" cy="140" r="125"></circle>
+          </svg>
+
+          <div class="digital-display" id="timer-display">
+            <div class="time-main">
+              <span id="tm-hours" class="time-unit">00</span><span class="colon">:</span>
+              <span id="tm-minutes" class="time-unit">05</span><span class="colon">:</span>
+              <span id="tm-seconds" class="time-unit">00</span>
+            </div>
+            <div class="status-badge" id="tm-status">Temporizador</div>
+          </div>
+        </div>
+
+        <!-- Presets Rápidos -->
+        <div class="presets-container" id="timer-presets">
+          <button class="preset-btn" data-seconds="60">1 min</button>
+          <button class="preset-btn" data-seconds="180">3 min</button>
+          <button class="preset-btn active" data-seconds="300">5 min</button>
+          <button class="preset-btn" data-seconds="600">10 min</button>
+          <button class="preset-btn" data-seconds="900">15 min</button>
+          <button class="preset-btn" data-seconds="1500">25 min (Pomodoro)</button>
+        </div>
+
+        <!-- Seletor de Tempo Personalizado -->
+        <div class="custom-timer-inputs" id="custom-inputs-wrapper">
+          <div class="input-group">
+            <label for="timer-input-hours">Horas</label>
+            <input type="number" id="timer-input-hours" min="0" max="99" value="0" placeholder="00">
+          </div>
+          <span class="input-separator">:</span>
+          <div class="input-group">
+            <label for="timer-input-minutes">Minutos</label>
+            <input type="number" id="timer-input-minutes" min="0" max="59" value="5" placeholder="00">
+          </div>
+          <span class="input-separator">:</span>
+          <div class="input-group">
+            <label for="timer-input-seconds">Segundos</label>
+            <input type="number" id="timer-input-seconds" min="0" max="59" value="0" placeholder="00">
+          </div>
+        </div>
+
+        <!-- Botões de Controle do Timer -->
+        <div class="controls-container">
+          <button id="btn-tm-toggle" class="btn btn-primary btn-start" title="Iniciar/Pausar Temporizador">
+            <svg id="tm-play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <svg id="tm-pause-icon" class="hidden" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+            <span id="tm-toggle-text">Iniciar</span>
+          </button>
+
+          <button id="btn-tm-reset" class="btn btn-secondary" title="Redefinir Temporizador">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+            <span>Redefinir</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rodapé com Informações & Atalhos -->
+    <footer class="app-footer">
+      <div class="footer-shortcuts">
+        <span class="shortcut-badge"><kbd>Espaço</kbd> Iniciar/Pausar</span>
+        <span class="shortcut-badge"><kbd>L</kbd> Registrar Volta</span>
+        <span class="shortcut-badge"><kbd>R</kbd> Zerar</span>
+        <span class="shortcut-badge"><kbd>T</kbd> Alternar Modo</span>
+      </div>
+      <div class="sound-toggle">
+        <button id="btn-sound-toggle" class="sound-btn active" title="Alternar Efeitos Sonoros">
+          <svg id="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+          <svg id="icon-sound-off" class="hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+          <span>Som Ativado</span>
+        </button>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Toast de Notificação -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
