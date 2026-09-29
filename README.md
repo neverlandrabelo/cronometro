@@ -2,6 +2,11 @@
 
 Aplicação web moderna, precisa e responsiva de **Cronômetro (Stopwatch)** e **Temporizador (Countdown Timer)** desenvolvida em HTML5, CSS3 puro (Vanilla CSS) e JavaScript ES6+.
 
+<p align="left">
+  <a href="https://neverlandrabelo.github.io/cronometro/"><img src="https://img.shields.io/badge/Acessar_Demonstração_Online-22c55e?style=for-the-badge&logo=google-chrome&logoColor=white" alt="Demo Online" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Licença-MIT-blue?style=for-the-badge" alt="Licença MIT" /></a>
+</p>
+
 ---
 
 ## ✨ Funcionalidades
